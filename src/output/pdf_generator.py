@@ -117,7 +117,7 @@ class PDFGenerator:
         """Add top companies summary table."""
         self.pdf.set_font("Helvetica", "B", 12)
         self.pdf.set_text_color(26, 95, 122)
-        self.pdf.cell(0, 10, f"Top {min(len(self.results), 10)} Undervalued Companies", new_x="LMARGIN", new_y="NEXT")
+        self.pdf.cell(0, 10, f"Top {len(self.results)} Undervalued Companies", new_x="LMARGIN", new_y="NEXT")
 
         if not self.results:
             self.pdf.set_font("Helvetica", "I", 10)
@@ -141,7 +141,7 @@ class PDFGenerator:
         self.pdf.set_font("Helvetica", "", 7)
         self.pdf.set_text_color(0, 0, 0)
 
-        for idx, result in enumerate(self.results[:10], 1):
+        for idx, result in enumerate(self.results, 1):
             m = result.metrics
 
             row_data = [
@@ -177,7 +177,7 @@ class PDFGenerator:
         self.pdf.set_text_color(26, 95, 122)
         self.pdf.cell(0, 10, "Detailed Analysis", new_x="LMARGIN", new_y="NEXT")
 
-        for idx, result in enumerate(self.results[:10], 1):
+        for idx, result in enumerate(self.results, 1):
             if self.pdf.get_y() > 220:
                 self.pdf.add_page()
 
