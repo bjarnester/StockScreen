@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nordic Stock Screener Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            color: #333;
+            margin: 20px;
+        }
+        h1 {
+            color: #1a5f7a;
+            border-bottom: 2px solid #1a5f7a;
+            padding-bottom: 10px;
+            font-size: 18pt;
+        }
+        h2 {
+            color: #2d7d9a;
+            margin-top: 25px;
+            font-size: 14pt;
+        }
+        h3 {
+            color: #333;
+            margin-top: 20px;
+            font-size: 12pt;
+        }
+        .summary-box {
+            background-color: #f5f9fa;
+            border: 1px solid #d0e0e5;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .summary-stat {
+            display: inline-block;
+            margin-right: 30px;
+        }
+        .stat-value {
+            font-size: 18pt;
+            font-weight: bold;
+            color: #1a5f7a;
+        }
+        .stat-label {
+            font-size: 9pt;
+            color: #666;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 9pt;
+        }
+        th {
+            background-color: #1a5f7a;
+            color: white;
+            padding: 8px 6px;
+            text-align: left;
+            font-weight: bold;
+        }
+        td {
+            padding: 6px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f0f5f7;
+        }
+        .pass {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .fail {
+            color: #c62828;
+        }
+        .neutral {
+            color: #666;
+        }
+        .score {
+            font-weight: bold;
+            color: #1a5f7a;
+        }
+        .company-card {
+            border: 1px solid #d0e0e5;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            page-break-inside: avoid;
+        }
+        .company-header {
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .company-name {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #1a5f7a;
+        }
+        .company-ticker {
+            color: #666;
+            font-size: 10pt;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .metric-item {
+            text-align: center;
+            padding: 8px;
+            background-color: #f5f9fa;
+            border-radius: 3px;
+        }
+        .metric-value {
+            font-size: 12pt;
+            font-weight: bold;
+            color: #333;
+        }
+        .metric-label {
+            font-size: 8pt;
+            color: #666;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 8pt;
+            color: #666;
+            text-align: center;
+        }
+        .criteria-box {
+            background-color: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 5px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 9pt;
+        }
+        .criteria-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+    </style>
+</head>
+<body>
+    <h1>Nordic Stock Screener Report</h1>
+    <p>Generated: {{ report_date }}</p>
+
+    <div class="summary-box">
+        <div class="summary-stat">
+            <div class="stat-value">{{ total_screened }}</div>
+            <div class="stat-label">Companies Screened</div>
+        </div>
+        <div class="summary-stat">
+            <div class="stat-value">{{ total_passed }}</div>
+            <div class="stat-label">Passed All Criteria</div>
+        </div>
+        <div class="summary-stat">
+            <div class="stat-value">{{ exchanges|join(', ') }}</div>
+            <div class="stat-label">Exchanges</div>
+        </div>
+    </div>
+
+    <div class="criteria-box">
+        <div class="criteria-title">Screening Criteria:</div>
+        <ul>
+            <li>PE Ratio below industry average</li>
+            <li>ROIC > 10% for last 6 years</li>
+            <li>Consistent revenue growth for 5 years</li>
+            <li>Consistent earnings growth for 5 years</li>
+            <li>Debt-to-Equity < 0.5</li>
+            <li>Positive Free Cash Flow</li>
+            <li>Cash Flow Yield >= 5%</li>
+            <li>Positive Earnings (exclude loss-makers)</li>
+        </ul>
+    </div>
+
+    <h2>Top {{ top_companies|length }} Undervalued Companies</h2>
+
+    <table>
+        <tr>
+            <th>Rank</th>
+            <th>Company</th>
+            <th>Ticker</th>
+            <th>Exchange</th>
+            <th>Sector</th>
+            <th>PE</th>
+            <th>ROIC</th>
+            <th>D/E</th>
+            <th>CF Yield</th>
+            <th>Score</th>
+        </tr>
+        {% for result in top_companies %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ result.metrics.name }}</td>
+            <td>{{ result.metrics.ticker }}</td>
+            <td>{{ result.metrics.exchange|title }}</td>
+            <td>{{ result.metrics.sector or 'N/A' }}</td>
+            <td>{{ "%.1f"|format(result.metrics.pe_ratio) if result.metrics.pe_ratio else 'N/A' }}</td>
+            <td>{{ "%.1f%%"|format(result.metrics.roic * 100) if result.metrics.roic else 'N/A' }}</td>
+            <td>{{ "%.2f"|format(result.metrics.debt_to_equity) if result.metrics.debt_to_equity else 'N/A' }}</td>
+            <td>{{ "%.1f%%"|format(result.metrics.cf_yield * 100) if result.metrics.cf_yield else 'N/A' }}</td>
+            <td class="score">{{ "%.1f"|format(result.score) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="page-break"></div>
+
+    <h2>Detailed Analysis</h2>
+
+    {% for result in top_companies %}
+    <div class="company-card">
+        <div class="company-header">
+            <span class="company-name">{{ result.metrics.name }}</span>
+            <span class="company-ticker">{{ result.metrics.ticker }}</span>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-item">
+                <div class="metric-value">{{ "%.1f"|format(result.metrics.pe_ratio) if result.metrics.pe_ratio else 'N/A' }}</div>
+                <div class="metric-label">PE Ratio</div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-value">{{ "%.1f%%"|format(result.metrics.roic * 100) if result.metrics.roic else 'N/A' }}</div>
+                <div class="metric-label">ROIC</div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-value">{{ "%.2f"|format(result.metrics.debt_to_equity) if result.metrics.debt_to_equity else 'N/A' }}</div>
+                <div class="metric-label">Debt/Equity</div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-value">{{ "%.1f%%"|format(result.metrics.cf_yield * 100) if result.metrics.cf_yield else 'N/A' }}</div>
+                <div class="metric-label">CF Yield</div>
+            </div>
+        </div>
+
+        <table>
+            <tr>
+                <th>Criterion</th>
+                <th>Result</th>
+                <th>Details</th>
+            </tr>
+            {% for name, filter_result in result.filter_results.items() %}
+            <tr>
+                <td>{{ name|replace('_', ' ')|title }}</td>
+                <td class="{{ 'pass' if filter_result.passed else 'fail' }}">{{ 'PASS' if filter_result.passed else 'FAIL' }}</td>
+                <td>{{ filter_result.reason }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <p><strong>Industry:</strong> {{ result.metrics.industry or 'N/A' }} |
+           <strong>Revenue Growth:</strong> {{ result.metrics.revenue_growth_years or 0 }} years |
+           <strong>Earnings Growth:</strong> {{ result.metrics.earnings_growth_years or 0 }} years</p>
+    </div>
+    {% endfor %}
+
+    <div class="footer">
+        <p>Nordic Stock Screener | Data source: Yahoo Finance</p>
+        <p>This report is for informational purposes only and should not be considered investment advice.</p>
+    </div>
+</body>
+</html>
