@@ -101,8 +101,8 @@ class PDFGenerator:
         criteria = [
             f"PE Ratio <= {t.max_pe:.0f}",
             f"ROIC > {t.min_roic*100:.0f}% for last {t.roic_years} years",
-            f"Consistent revenue growth for {t.growth_years} years",
-            f"Consistent earnings growth for {t.growth_years} years",
+            f"Consistent revenue growth for {t.revenue_growth_years} years",
+            f"Consistent earnings growth for {t.earnings_growth_years} years",
             f"Debt-to-Equity < {t.max_debt_to_equity}",
             "Positive Free Cash Flow",
             f"Cash Flow Yield >= {t.min_cf_yield*100:.0f}%",

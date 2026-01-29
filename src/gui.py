@@ -26,7 +26,8 @@ class StockScreenerGUI:
         self.max_pe = tk.DoubleVar(value=settings.thresholds.max_pe)
         self.min_roic = tk.DoubleVar(value=settings.thresholds.min_roic * 100)
         self.roic_years = tk.IntVar(value=settings.thresholds.roic_years)
-        self.growth_years = tk.IntVar(value=settings.thresholds.growth_years)
+        self.revenue_growth_years = tk.IntVar(value=settings.thresholds.revenue_growth_years)
+        self.earnings_growth_years = tk.IntVar(value=settings.thresholds.earnings_growth_years)
         self.max_de = tk.DoubleVar(value=settings.thresholds.max_debt_to_equity)
         self.min_cf_yield = tk.DoubleVar(value=settings.thresholds.min_cf_yield * 100)
         self.min_filters = tk.IntVar(value=8)
@@ -93,29 +94,35 @@ class StockScreenerGUI:
         roic_years_spin.grid(row=2, column=1, sticky="w", pady=5, padx=5)
         ttk.Label(thresholds_frame, text="Years of ROIC history required").grid(row=2, column=2, sticky="w")
 
-        # Growth Years
-        ttk.Label(thresholds_frame, text="Growth Years:").grid(row=3, column=0, sticky="w", pady=5)
-        growth_spin = ttk.Spinbox(thresholds_frame, from_=1, to=10, increment=1, textvariable=self.growth_years, width=10)
-        growth_spin.grid(row=3, column=1, sticky="w", pady=5, padx=5)
-        ttk.Label(thresholds_frame, text="Consecutive growth years required").grid(row=3, column=2, sticky="w")
+        # Revenue Growth Years
+        ttk.Label(thresholds_frame, text="Revenue Growth Years:").grid(row=3, column=0, sticky="w", pady=5)
+        rev_growth_spin = ttk.Spinbox(thresholds_frame, from_=0, to=10, increment=1, textvariable=self.revenue_growth_years, width=10)
+        rev_growth_spin.grid(row=3, column=1, sticky="w", pady=5, padx=5)
+        ttk.Label(thresholds_frame, text="Consecutive revenue growth years").grid(row=3, column=2, sticky="w")
+
+        # Earnings Growth Years
+        ttk.Label(thresholds_frame, text="Earnings Growth Years:").grid(row=4, column=0, sticky="w", pady=5)
+        earn_growth_spin = ttk.Spinbox(thresholds_frame, from_=0, to=10, increment=1, textvariable=self.earnings_growth_years, width=10)
+        earn_growth_spin.grid(row=4, column=1, sticky="w", pady=5, padx=5)
+        ttk.Label(thresholds_frame, text="Consecutive earnings growth years").grid(row=4, column=2, sticky="w")
 
         # Max D/E
-        ttk.Label(thresholds_frame, text="Max Debt/Equity:").grid(row=4, column=0, sticky="w", pady=5)
+        ttk.Label(thresholds_frame, text="Max Debt/Equity:").grid(row=5, column=0, sticky="w", pady=5)
         de_spin = ttk.Spinbox(thresholds_frame, from_=0.1, to=5.0, increment=0.1, textvariable=self.max_de, width=10)
-        de_spin.grid(row=4, column=1, sticky="w", pady=5, padx=5)
-        ttk.Label(thresholds_frame, text="Maximum debt-to-equity ratio").grid(row=4, column=2, sticky="w")
+        de_spin.grid(row=5, column=1, sticky="w", pady=5, padx=5)
+        ttk.Label(thresholds_frame, text="Maximum debt-to-equity ratio").grid(row=5, column=2, sticky="w")
 
         # Min CF Yield
-        ttk.Label(thresholds_frame, text="Min CF Yield (%):").grid(row=5, column=0, sticky="w", pady=5)
+        ttk.Label(thresholds_frame, text="Min CF Yield (%):").grid(row=6, column=0, sticky="w", pady=5)
         cf_spin = ttk.Spinbox(thresholds_frame, from_=0, to=30, increment=1, textvariable=self.min_cf_yield, width=10)
-        cf_spin.grid(row=5, column=1, sticky="w", pady=5, padx=5)
-        ttk.Label(thresholds_frame, text="Minimum free cash flow yield").grid(row=5, column=2, sticky="w")
+        cf_spin.grid(row=6, column=1, sticky="w", pady=5, padx=5)
+        ttk.Label(thresholds_frame, text="Minimum free cash flow yield").grid(row=6, column=2, sticky="w")
 
         # Min Filters
-        ttk.Label(thresholds_frame, text="Min Filters:").grid(row=6, column=0, sticky="w", pady=5)
+        ttk.Label(thresholds_frame, text="Min Filters:").grid(row=7, column=0, sticky="w", pady=5)
         filters_spin = ttk.Spinbox(thresholds_frame, from_=1, to=8, increment=1, textvariable=self.min_filters, width=10)
-        filters_spin.grid(row=6, column=1, sticky="w", pady=5, padx=5)
-        ttk.Label(thresholds_frame, text="Minimum filters to pass (8 = all)").grid(row=6, column=2, sticky="w")
+        filters_spin.grid(row=7, column=1, sticky="w", pady=5, padx=5)
+        ttk.Label(thresholds_frame, text="Minimum filters to pass (8 = all)").grid(row=7, column=2, sticky="w")
 
         # Buttons frame
         buttons_frame = ttk.Frame(main_frame)
@@ -189,7 +196,8 @@ class StockScreenerGUI:
         settings.thresholds.max_pe = self.max_pe.get()
         settings.thresholds.min_roic = self.min_roic.get() / 100
         settings.thresholds.roic_years = self.roic_years.get()
-        settings.thresholds.growth_years = self.growth_years.get()
+        settings.thresholds.revenue_growth_years = self.revenue_growth_years.get()
+        settings.thresholds.earnings_growth_years = self.earnings_growth_years.get()
         settings.thresholds.max_debt_to_equity = self.max_de.get()
         settings.thresholds.min_cf_yield = self.min_cf_yield.get() / 100
 
@@ -315,7 +323,8 @@ class StockScreenerGUI:
         self.max_pe.set(15.0)
         self.min_roic.set(10.0)
         self.roic_years.set(3)
-        self.growth_years.set(3)
+        self.revenue_growth_years.set(3)
+        self.earnings_growth_years.set(3)
         self.max_de.set(1.0)
         self.min_cf_yield.set(5.0)
         self.min_filters.set(8)

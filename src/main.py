@@ -119,8 +119,8 @@ def info():
     thresholds = settings.thresholds
     table.add_row("PE Ratio", f"<= {thresholds.max_pe:.0f}")
     table.add_row("ROIC", f"> {thresholds.min_roic*100:.0f}% for {thresholds.roic_years} years")
-    table.add_row("Revenue Growth", f"Consistent for {thresholds.growth_years} years")
-    table.add_row("Earnings Growth", f"Consistent for {thresholds.growth_years} years")
+    table.add_row("Revenue Growth", f"Consistent for {thresholds.revenue_growth_years} years")
+    table.add_row("Earnings Growth", f"Consistent for {thresholds.earnings_growth_years} years")
     table.add_row("Debt-to-Equity", f"< {thresholds.max_debt_to_equity}")
     table.add_row("Free Cash Flow", "Positive")
     table.add_row("CF Yield", f">= {thresholds.min_cf_yield*100:.0f}%")

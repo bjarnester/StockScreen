@@ -67,7 +67,7 @@ class StockFilters:
 
     def filter_revenue_growth(self, metrics: FinancialMetrics, growth_years: int) -> FilterResult:
         """Check for consistent revenue growth."""
-        required_years = self.thresholds.growth_years
+        required_years = self.thresholds.revenue_growth_years
 
         if growth_years is None:
             return FilterResult(False, "Revenue growth data not available")
@@ -83,7 +83,7 @@ class StockFilters:
 
     def filter_earnings_growth(self, metrics: FinancialMetrics, growth_years: int) -> FilterResult:
         """Check for consistent earnings growth."""
-        required_years = self.thresholds.growth_years
+        required_years = self.thresholds.earnings_growth_years
 
         if growth_years is None:
             return FilterResult(False, "Earnings growth data not available")

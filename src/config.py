@@ -17,7 +17,8 @@ class ScreeningThresholds(BaseModel):
     max_pe: float = Field(default=15.0, description="Maximum PE ratio")
     min_roic: float = Field(default=0.10, description="Minimum ROIC (10%)")
     roic_years: int = Field(default=3, description="Years of ROIC history required (yfinance typically has 4)")
-    growth_years: int = Field(default=3, description="Years of consistent growth required")
+    revenue_growth_years: int = Field(default=3, description="Years of consistent revenue growth required")
+    earnings_growth_years: int = Field(default=3, description="Years of consistent earnings growth required")
     max_debt_to_equity: float = Field(default=1.0, description="Maximum D/E ratio")
     min_cf_yield: float = Field(default=0.05, description="Minimum FCF/Revenue (5%)")
 
