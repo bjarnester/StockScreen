@@ -117,7 +117,7 @@ def info():
     table.add_column("Threshold", style="green")
 
     thresholds = settings.thresholds
-    table.add_row("PE Ratio", "Below industry average")
+    table.add_row("PE Ratio", f"<= {thresholds.max_pe:.0f}")
     table.add_row("ROIC", f"> {thresholds.min_roic*100:.0f}% for {thresholds.roic_years} years")
     table.add_row("Revenue Growth", f"Consistent for {thresholds.growth_years} years")
     table.add_row("Earnings Growth", f"Consistent for {thresholds.growth_years} years")

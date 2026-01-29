@@ -30,24 +30,20 @@ class StockFilters:
         self.industry_avg = industry_averages
         self.thresholds = settings.thresholds
 
-    def filter_pe_below_industry(self, metrics: FinancialMetrics) -> FilterResult:
-        """Check if PE is below industry average."""
+    def filter_pe_below_max(self, metrics: FinancialMetrics) -> FilterResult:
+        """Check if PE is below maximum threshold."""
+        max_pe = self.thresholds.max_pe
+
         if metrics.pe_ratio is None:
             return FilterResult(False, "PE ratio not available")
 
-        peer_avg = self.industry_avg.get_peer_average(metrics.industry, metrics.sector)
-
-        if peer_avg is None:
-            # If no peer data, use market average of ~20
-            peer_avg = 20.0
-
-        passed = metrics.pe_ratio < peer_avg
+        passed = metrics.pe_ratio <= max_pe
 
         return FilterResult(
             passed=passed,
-            reason=f"PE {metrics.pe_ratio:.1f} {'<' if passed else '>='} industry avg {peer_avg:.1f}",
+            reason=f"PE {metrics.pe_ratio:.1f} {'<=' if passed else '>'} max {max_pe:.1f}",
             value=metrics.pe_ratio,
-            threshold=peer_avg
+            threshold=max_pe
         )
 
     def filter_roic_consistent(self, metrics: FinancialMetrics) -> FilterResult:

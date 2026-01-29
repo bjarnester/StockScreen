@@ -97,14 +97,15 @@ class PDFGenerator:
         self.pdf.set_font("Helvetica", "", 9)
         self.pdf.set_text_color(0, 0, 0)
 
+        t = settings.thresholds
         criteria = [
-            "PE Ratio below industry average",
-            "ROIC > 10% for last 6 years",
-            "Consistent revenue growth for 5 years",
-            "Consistent earnings growth for 5 years",
-            "Debt-to-Equity < 0.5",
+            f"PE Ratio <= {t.max_pe:.0f}",
+            f"ROIC > {t.min_roic*100:.0f}% for last {t.roic_years} years",
+            f"Consistent revenue growth for {t.growth_years} years",
+            f"Consistent earnings growth for {t.growth_years} years",
+            f"Debt-to-Equity < {t.max_debt_to_equity}",
             "Positive Free Cash Flow",
-            "Cash Flow Yield >= 5%",
+            f"Cash Flow Yield >= {t.min_cf_yield*100:.0f}%",
             "Positive Earnings (exclude loss-makers)",
         ]
 

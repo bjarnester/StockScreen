@@ -174,7 +174,7 @@ class Screener:
         filter_results = {}
 
         # Apply each filter
-        filter_results["pe_below_industry"] = self.filters.filter_pe_below_industry(metrics)
+        filter_results["pe_below_max"] = self.filters.filter_pe_below_max(metrics)
         filter_results["roic_consistent"] = self.filters.filter_roic_consistent(metrics)
         filter_results["revenue_growth"] = self.filters.filter_revenue_growth(
             metrics, growth_data.get("revenue_growth_years")
@@ -223,7 +223,7 @@ class Screener:
             score += roic_score
 
         # PE discount contribution (0-20 points)
-        pe_result = filter_results.get("pe_below_industry")
+        pe_result = filter_results.get("pe_below_max")
         if pe_result and pe_result.value and pe_result.threshold:
             discount = (pe_result.threshold - pe_result.value) / pe_result.threshold
             pe_score = max(0, min(discount * 40, 20))  # Up to 20 points for 50% discount

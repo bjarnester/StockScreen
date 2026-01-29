@@ -14,6 +14,7 @@ class ExchangeConfig(BaseModel):
 
 class ScreeningThresholds(BaseModel):
     """Thresholds for screening criteria."""
+    max_pe: float = Field(default=15.0, description="Maximum PE ratio")
     min_roic: float = Field(default=0.10, description="Minimum ROIC (10%)")
     roic_years: int = Field(default=3, description="Years of ROIC history required (yfinance typically has 4)")
     growth_years: int = Field(default=3, description="Years of consistent growth required")
